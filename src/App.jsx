@@ -2,11 +2,11 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "./App.css";
 import AppLayout from "./layouts/app-layout";
 import Home from "./pages/home";
-import Categories from "./pages/categories";
 import Search from "./pages/search";
 import Favorites from "./pages/favorites";
 import GifPage from "./pages/single-gif";
 import GifProvider from "./context/gif-context";
+import Category from "./pages/category";
 
 //homepage
 //categories
@@ -23,8 +23,8 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/:categories",
-        element: <Categories />,
+        path: "/:category",
+        element: <Category />,
       },
       {
         path: "/search/:query",
