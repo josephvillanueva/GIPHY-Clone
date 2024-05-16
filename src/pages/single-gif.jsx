@@ -39,13 +39,9 @@ const GifPage = () => {
     fetchGif();
   }, []);
 
-  const shareGif = () => {
-    // Assignment
-  };
+  const shareGif = () => {};
 
-  const EmbedGif = () => {
-    // Assignment
-  };
+  const EmbedGif = () => {};
 
   return (
     <div className="grid grid-cols-4 my-10 gap-4">
