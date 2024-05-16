@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { HiEllipsisVertical } from "react-icons/hi2";
+import { HiEllipsisVertical, HiMiniBars3BottomRight } from "react-icons/hi2";
 import { Link } from "react-router-dom";
 import { GifState } from "../context/gif-context";
 import GifSearch from "./gif-search";
@@ -57,6 +57,13 @@ const Header = () => {
               <Link to="/favorites">Favorite GIFs</Link>
             </div>
           )}
+
+          <button onClick={() => setShowCategories(!showCategories)}>
+            <HiMiniBars3BottomRight
+              className="text-sky-400 block lg:hidden"
+              size={30}
+            />
+          </button>
         </div>
 
         {showCategories && (
