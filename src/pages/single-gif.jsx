@@ -107,6 +107,22 @@ const GifPage = () => {
           <div className="w-full sm:w-3/4">
             <div className="faded-text truncate mb-2">{gif.title}</div>
             <Gif gif={gif} hover={false} />
+
+            <div className="flex sm:hidden gap-1">
+              <img
+                src={gif?.user?.avatar_url}
+                alt={gif?.user?.display_name}
+                className="h-14"
+              />
+              <div className="px-2">
+                <div className="font-bold">{gif?.user?.display_name}</div>
+                <div className="faded-text">@{gif?.user?.username}</div>
+              </div>
+
+              <button className="ml-auto" onClick={shareGif}>
+                <FaPaperPlane size={25} />
+              </button>
+            </div>
           </div>
 
           <div className="hidden sm:flex flex-col gap-5 mt-6">
