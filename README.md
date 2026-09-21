@@ -31,6 +31,10 @@ A GIPHY-style app for browsing trending GIFs, searching GIFs, stickers, and text
 - **One data hook (`useGiphy`) for every page.** Each request is keyed by all of its inputs (query, filter, GIF ID), so moving between two searches or two GIFs on the same route always refetches, and a response from a superseded request is discarded. Every page gets the same loading skeleton, error message, and retry. The retry button waits out the SDK's six-second cache of failed requests, since retrying sooner would only return the cached failure.
 - **Deep links work on Vercel.** `vercel.json` rewrites every path to `index.html`, so refreshing or sharing a search, category, or GIF URL loads the app instead of a 404.
 
+## Architecture
+
+![GIPHY Clone architecture: React Router renders pages that request data through the useGiphy hook and the GIPHY API, with favorites held in context and saved to localStorage](docs/architecture.svg)
+
 ## Running locally
 
 Requires Node 20+ and a free [GIPHY API key](https://developers.giphy.com/).
