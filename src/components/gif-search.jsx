@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-
 import { useState } from "react";
 import { HiMiniXMark, HiOutlineMagnifyingGlass } from "react-icons/hi2";
 import { useNavigate } from "react-router-dom";
@@ -8,38 +6,49 @@ const GifSearch = () => {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
 
-  const searchGIFs = async () => {
-    if (query.trim() === "") {
-      return;
-    }
-
-    navigate(`/search/${query}`);
+  // A real form, so pressing Enter searches. The query is encoded so terms
+  // containing "/", "#", or "?" do not break the route.
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const term = query.trim();
+    if (term) navigate(`/search/${encodeURIComponent(term)}`);
   };
 
   return (
-    <div className="flex relative">
+    <form role="search" onSubmit={handleSubmit} className="flex relative">
+      <label htmlFor="gif-search" className="sr-only">
+        Search GIFs and stickers
+      </label>
       <input
-        type="text"
+        id="gif-search"
+        type="search"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search all the GIFs and Stickers"
-        className="w-full pl-4 pr-14 py-5 text-xl text-black rounded-tl rounded-bl border border-gray-300 outline-none"
+        className="w-full pl-4 pr-14 py-5 text-xl text-black rounded-tl rounded-bl border border-gray-300 outline-none focus-visible:ring-4 focus-visible:ring-pink-400"
       />
       {query && (
         <button
+          type="button"
           onClick={() => setQuery("")}
-          className="absolute bg-gray-300 opacity-90 rounded-full right-20 mr-2 top-6"
+          aria-label="Clear search"
+          className="absolute bg-gray-300 opacity-90 rounded-full right-20 mr-2 top-6 text-black"
         >
-          <HiMiniXMark size={22} />
+          <HiMiniXMark size={22} aria-hidden="true" />
         </button>
       )}
       <button
-        onClick={searchGIFs}
+        type="submit"
+        aria-label="Search"
         className="bg-gradient-to-tr from-pink-600 to-pink-400 text-white px-4 py-2 rounded-tr rounded-br"
       >
-        <HiOutlineMagnifyingGlass size={35} className="-scale-x-100" />
+        <HiOutlineMagnifyingGlass
+          size={35}
+          className="-scale-x-100"
+          aria-hidden="true"
+        />
       </button>
-    </div>
+    </form>
   );
 };
 
