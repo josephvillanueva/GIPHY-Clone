@@ -19,6 +19,7 @@ const GifPage = () => {
   const [gif, setGif] = useState({});
   const [relatedGifs, setRelatedGifs] = useState([]);
   const [readMore, setReadMore] = useState(false);
+  const [copied, setCopied] = useState(null);
 
   const { gf, addToFavorites, favorites } = GifState();
 
@@ -39,9 +40,36 @@ const GifPage = () => {
     fetchGif();
   }, []);
 
-  const shareGif = () => {};
+  const copyToClipboard = async (text, label) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(label);
+      setTimeout(() => setCopied(null), 2000);
+    } catch {
+      window.prompt("Copy this:", text);
+    }
+  };
 
-  const EmbedGif = () => {};
+  const shareGif = async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: gif?.title, url });
+      } catch {
+        // The user dismissed the share sheet.
+      }
+      return;
+    }
+    copyToClipboard(url, "share");
+  };
+
+  const EmbedGif = () => {
+    if (!gif?.embed_url) return;
+    copyToClipboard(
+      `<iframe src="${gif.embed_url}" width="480" height="270" frameborder="0" allowfullscreen></iframe>`,
+      "embed"
+    );
+  };
 
   return (
     <div className="grid grid-cols-4 my-10 gap-4">
@@ -139,14 +167,14 @@ const GifPage = () => {
               className="flex gap-6 items-center font-bold text-lg"
             >
               <FaPaperPlane size={25} />
-              Share
+              {copied === "share" ? "Link copied" : "Share"}
             </button>
             <button
               onClick={EmbedGif}
               className="flex gap-5 items-center font-bold text-lg"
             >
               <IoCodeSharp size={30} />
-              Embed
+              {copied === "embed" ? "Embed code copied" : "Embed"}
             </button>
           </div>
         </div>

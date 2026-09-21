@@ -1,8 +1,47 @@
-# React + Vite
+# GIPHY Clone
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A GIPHY-style app for browsing trending GIFs, searching GIFs, stickers, and text, and saving favorites.
 
-Currently, two official plugins are available:
+**Live:** https://giphy-clone.vercel.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+<!-- Add a screenshot: save one as public/screenshot.png and uncomment the line below -->
+<!-- ![GIPHY Clone home page](public/screenshot.png) -->
+
+## Features
+
+- **Trending feed** on the home page
+- **Search** with a GIFs / Stickers / Text filter that applies across pages
+- **Category pages** at `/:category`
+- **GIF detail pages** with related GIFs, plus share (native share sheet or copy link) and copy-embed-code
+- **Favorites**, saved to `localStorage` so they survive a reload with no account needed
+- Responsive layout for mobile and desktop
+
+## Tech stack
+
+- React 18 + Vite
+- React Router (data router with a shared layout route)
+- Tailwind CSS
+- [`@giphy/js-fetch-api`](https://github.com/Giphy/giphy-js) for trending, search, category, and related-GIF requests
+
+## How it's built
+
+- **One shared context (`GifProvider`)** holds the GIPHY client, the active content-type filter, and favorites. The filter lives there so it carries over as you move between search, category, and home, without prop drilling.
+- **Favorites store IDs, not GIF objects.** The Favorites page fetches the current data for those IDs in one batched `gf.gifs(ids)` call, so saved items never go stale and `localStorage` stays small.
+- **Routes are nested under one layout**, so the header and search bar mount once and the pages swap underneath.
+
+## Running locally
+
+Requires Node 20+ and a free [GIPHY API key](https://developers.giphy.com/).
+
+```bash
+git clone https://github.com/josephvillanueva/GIPHY-Clone.git
+cd GIPHY-Clone
+npm install
+echo "VITE_GIPHY_KEY=your_key_here" > .env
+npm run dev
+```
+
+## What I'd do next
+
+- Infinite scroll on search and trending results
+- Move favorites to a small backend so they sync across devices
