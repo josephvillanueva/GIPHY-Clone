@@ -28,6 +28,8 @@ A GIPHY-style app for browsing trending GIFs, searching GIFs, stickers, and text
 - **One shared context (`GifProvider`)** holds the GIPHY client, the active content-type filter, and favorites. The filter lives there so it carries over as you move between search, category, and home, without prop drilling.
 - **Favorites store IDs, not GIF objects.** The Favorites page fetches the current data for those IDs in one batched `gf.gifs(ids)` call, so saved items never go stale and `localStorage` stays small.
 - **Routes are nested under one layout**, so the header and search bar mount once and the pages swap underneath.
+- **One data hook (`useGiphy`) for every page.** Each request is keyed by all of its inputs (query, filter, GIF ID), so moving between two searches or two GIFs on the same route always refetches, and a response from a superseded request is discarded. Every page gets the same loading skeleton, error message, and retry. The retry button waits out the SDK's six-second cache of failed requests, since retrying sooner would only return the cached failure.
+- **Deep links work on Vercel.** `vercel.json` rewrites every path to `index.html`, so refreshing or sharing a search, category, or GIF URL loads the app instead of a 404.
 
 ## Running locally
 

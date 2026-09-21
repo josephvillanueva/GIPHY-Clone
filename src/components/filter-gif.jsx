@@ -35,26 +35,33 @@ const FilterGif = ({ alignLeft = false, showTrending = false }) => {
     >
       {showTrending && (
         <span className="flex gap-2">
-          {showTrending && (
-            <HiMiniArrowTrendingUp size={25} className="text-teal-400" />
-          )}
+          <HiMiniArrowTrendingUp
+            size={25}
+            className="text-teal-400"
+            aria-hidden="true"
+          />
           <span className="font-semibold text-gray-400">Trending</span>
         </span>
       )}
-      <div className="flex min-w-80 rounded-full bg-gray-800">
-        {filters.map((f) => {
-          return (
-            <span
-              onClick={() => setFilter(f.value)}
-              className={`${
-                filter === f.value ? f.background : ""
-              } font-semibold py-2 w-1/3 text-center rounded-full cursor-pointer `}
-              key={f.title}
-            >
-              {f.title}
-            </span>
-          );
-        })}
+      {/* Buttons rather than clickable spans, so the filter works by keyboard. */}
+      <div
+        className="flex min-w-80 rounded-full bg-gray-800"
+        role="group"
+        aria-label="Content type"
+      >
+        {filters.map((f) => (
+          <button
+            type="button"
+            key={f.value}
+            onClick={() => setFilter(f.value)}
+            aria-pressed={filter === f.value}
+            className={`${
+              filter === f.value ? f.background : ""
+            } font-semibold py-2 w-1/3 text-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-white`}
+          >
+            {f.title}
+          </button>
+        ))}
       </div>
     </div>
   );
