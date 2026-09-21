@@ -2,7 +2,7 @@
 
 A GIPHY-style app for browsing trending GIFs, searching GIFs, stickers, and text, and saving favorites.
 
-**Live:** https://giphy-clone.vercel.app
+**Live:** https://giphy-clone.vercel.app · **[Product brief](docs/PRODUCT.md)** · **[Roadmap](https://github.com/josephvillanueva/GIPHY-Clone/milestone/1)**
 
 <!-- Add a screenshot: save one as public/screenshot.png and uncomment the line below -->
 <!-- ![GIPHY Clone home page](public/screenshot.png) -->
