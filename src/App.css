@@ -1,15 +1,31 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-@layer utilities {
-  .gradient {
-    @apply bg-gradient-to-r from-teal-600 via-blue-600 to-pink-600;
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
   }
-  .faded-text {
-    @apply font-bold text-sm text-gray-400;
-  }
-  .divider {
-    @apply w-full h-0.5 my-6 bg-gray-800;
-  }
+}
+
+@utility gradient {
+  @apply bg-linear-to-r from-teal-600 via-blue-600 to-pink-600;
+}
+
+@utility faded-text {
+  @apply font-bold text-sm text-gray-400;
+}
+
+@utility divider {
+  @apply w-full h-0.5 my-6 bg-gray-800;
 }

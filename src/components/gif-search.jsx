@@ -25,7 +25,7 @@ const GifSearch = () => {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search all the GIFs and Stickers"
-        className="w-full pl-4 pr-14 py-5 text-xl text-black rounded-tl rounded-bl border border-gray-300 outline-none focus-visible:ring-4 focus-visible:ring-pink-400"
+        className="w-full bg-white pl-4 pr-14 py-5 text-xl text-black rounded-tl rounded-bl border border-gray-300 outline-hidden focus-visible:ring-4 focus-visible:ring-pink-400"
       />
       {query && (
         <button
@@ -40,7 +40,7 @@ const GifSearch = () => {
       <button
         type="submit"
         aria-label="Search"
-        className="bg-gradient-to-tr from-pink-600 to-pink-400 text-white px-4 py-2 rounded-tr rounded-br"
+        className="bg-linear-to-tr from-pink-600 to-pink-400 text-white px-4 py-2 rounded-tr rounded-br"
       >
         <HiOutlineMagnifyingGlass
           size={35}

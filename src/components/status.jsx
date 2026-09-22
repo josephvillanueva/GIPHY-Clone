@@ -11,7 +11,7 @@ export const GifGridSkeleton = ({ count = 10 }) => (
     {Array.from({ length: count }, (_, i) => (
       <div
         key={i}
-        className="mb-2 w-full animate-pulse rounded bg-gray-700"
+        className="mb-2 w-full animate-pulse rounded-sm bg-gray-700"
         style={{ height: `${120 + ((i * 37) % 90)}px` }}
       />
     ))}
@@ -33,7 +33,7 @@ export const ErrorMessage = ({ onRetry, retryAt }) => {
   return (
     <div
       role="alert"
-      className="my-8 flex flex-col items-center gap-3 rounded bg-gray-800 p-6 text-center"
+      className="my-8 flex flex-col items-center gap-3 rounded-sm bg-gray-800 p-6 text-center"
     >
       <p>Couldn&apos;t reach GIPHY. Check your connection and try again.</p>
       {onRetry && (
@@ -41,7 +41,7 @@ export const ErrorMessage = ({ onRetry, retryAt }) => {
           type="button"
           onClick={onRetry}
           disabled={secondsLeft > 0}
-          className="rounded bg-gradient-to-tr from-pink-600 to-pink-400 px-4 py-2 font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
+          className="rounded-sm bg-linear-to-tr from-pink-600 to-pink-400 px-4 py-2 font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {secondsLeft > 0 ? `Try again in ${secondsLeft}s` : "Try again"}
         </button>

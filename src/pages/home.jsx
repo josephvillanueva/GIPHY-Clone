@@ -15,7 +15,7 @@ function Home() {
 
   return (
     <div>
-      <img src="/banner.gif" alt="" className="mt-2 rounded w-full" />
+      <img src="/banner.gif" alt="" className="mt-2 rounded-sm w-full" />
 
       <FilterGif showTrending />
 
