@@ -1,28 +1,32 @@
 import { useParams } from "react-router-dom";
 import { GifState } from "../context/gif-context";
-import { useGiphy } from "../hooks/use-giphy";
-import Gif from "../components/gif";
+import { useGiphyPages } from "../hooks/use-giphy-pages";
 import FilterGif from "../components/filter-gif";
+import { GifGrid, PageFooter } from "../components/gif-grid";
 import {
   EmptyMessage,
   ErrorMessage,
   GifGridSkeleton,
 } from "../components/status";
 
+const PAGE_SIZE = 20;
+
 const Search = () => {
   const { gf, filter } = GifState();
   const { query } = useParams();
 
-  // Keyed on the query as well as the filter, so a second search from this
-  // page refetches instead of showing the previous term's results.
-  const {
-    status,
-    data: results,
-    retry,
-    retryAt,
-  } = useGiphy(`search:${query}:${filter}`, () =>
-    gf.search(query, { sort: "relevant", lang: "en", type: filter, limit: 20 }),
-  );
+  // Keyed on the query as well as the filter, so a new search or a filter
+  // change starts again from the first page.
+  const { status, items, hasMore, loadingMore, pageRetryAt, loadMore, retry, retryAt } =
+    useGiphyPages(`search:${query}:${filter}`, (offset) =>
+      gf.search(query, {
+        sort: "relevant",
+        lang: "en",
+        type: filter,
+        limit: PAGE_SIZE,
+        offset,
+      }),
+    );
 
   return (
     <div className="my-4">
@@ -32,12 +36,16 @@ const Search = () => {
       {status === "loading" && <GifGridSkeleton />}
       {status === "error" && <ErrorMessage onRetry={retry} retryAt={retryAt} />}
       {status === "success" &&
-        (results.length > 0 ? (
-          <div className="columns-2 md:columns-3 lg:columns-4 gap-2">
-            {results.map((gif) => (
-              <Gif gif={gif} key={gif.id} />
-            ))}
-          </div>
+        (items.length > 0 ? (
+          <>
+            <GifGrid gifs={items} maxColumns={4} />
+            <PageFooter
+              hasMore={hasMore}
+              loadingMore={loadingMore}
+              pageRetryAt={pageRetryAt}
+              onLoadMore={loadMore}
+            />
+          </>
         ) : (
           <EmptyMessage>
             No results for &ldquo;{query}&rdquo;. Try another word, or switch
