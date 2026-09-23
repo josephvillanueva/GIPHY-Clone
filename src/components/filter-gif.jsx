@@ -8,17 +8,17 @@ const filters = [
     title: "GIFs",
     value: "gifs",
     background:
-      "bg-gradient-to-tr from-purple-500 via-purple-600 to-purple-500",
+      "bg-linear-to-tr from-purple-500 via-purple-600 to-purple-500",
   },
   {
     title: "Stickers",
     value: "stickers",
-    background: "bg-gradient-to-tr from-teal-500 via-teal-600 to-teal-500",
+    background: "bg-linear-to-tr from-teal-500 via-teal-600 to-teal-500",
   },
   {
     title: "Text",
     value: "text",
-    background: "bg-gradient-to-tr from-blue-500 via-blue-600 to-blue-500",
+    background: "bg-linear-to-tr from-blue-500 via-blue-600 to-blue-500",
   },
 ];
 
@@ -57,7 +57,7 @@ const FilterGif = ({ alignLeft = false, showTrending = false }) => {
             aria-pressed={filter === f.value}
             className={`${
               filter === f.value ? f.background : ""
-            } font-semibold py-2 w-1/3 text-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-white`}
+            } font-semibold py-2 w-1/3 text-center rounded-full focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-white`}
           >
             {f.title}
           </button>

@@ -8,7 +8,7 @@ const Gif = ({ gif, hover = true }) => {
   return (
     <Link
       to={`/${gif.type}s/${gif.slug}`}
-      className="block rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+      className="block rounded-sm focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-white"
     >
       <div className="w-full mb-2 relative bg-png-pattern cursor-pointer group">
         <img
@@ -17,10 +17,10 @@ const Gif = ({ gif, hover = true }) => {
           width={still?.width}
           height={still?.height}
           loading="lazy"
-          className="w-full h-auto object-cover rounded transition-all duration-300"
+          className="w-full h-auto object-cover rounded-sm transition-all duration-300"
         />
         {hover && gif?.user && (
-          <div className="absolute inset-0 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-b from-transparent via-transparent to-black font-bold flex items-end gap-2 p-2">
+          <div className="absolute inset-0 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-linear-to-b from-transparent via-transparent to-black font-bold flex items-end gap-2 p-2">
             <img
               src={gif.user.avatar_url}
               alt=""

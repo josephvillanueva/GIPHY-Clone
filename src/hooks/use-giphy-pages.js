@@ -8,6 +8,7 @@ const SDK_ERROR_CACHE_MS = 6000;
 const MAX_OFFSET = 4999;
 
 const initialState = {
+  token: null,
   status: "loading",
   items: [],
   hasMore: false,
@@ -30,8 +31,13 @@ function hasMoreAfter({ data, pagination }) {
  * skipped, so a result that shifts between pages never appears twice.
  */
 export function useGiphyPages(requestKey, fetchPage) {
-  const [state, setState] = useState(initialState);
   const [attempt, setAttempt] = useState(0);
+  const token = `${requestKey}#${attempt}`;
+  const [state, setState] = useState({ ...initialState, token });
+
+  // A new query, filter, or retry resets to page one during render, the
+  // pattern React recommends over resetting state inside an effect.
+  if (state.token !== token) setState({ ...initialState, token });
 
   // Always call the latest fetcher; it closes over the current query/filter.
   const fetchRef = useRef(fetchPage);
@@ -56,7 +62,6 @@ export function useGiphyPages(requestKey, fetchPage) {
     nextOffset.current = 0;
     seen.current = new Set();
     inFlight.current = false;
-    setState(initialState);
 
     fetchRef
       .current(0)
@@ -65,6 +70,7 @@ export function useGiphyPages(requestKey, fetchPage) {
         nextOffset.current = response.pagination.offset + response.pagination.count;
         setState({
           ...initialState,
+          token,
           status: "success",
           items: takeNew(response.data),
           hasMore: hasMoreAfter(response),
@@ -75,12 +81,13 @@ export function useGiphyPages(requestKey, fetchPage) {
         if (current !== generation.current) return;
         setState({
           ...initialState,
+          token,
           status: "error",
           error,
           retryAt: Date.now() + SDK_ERROR_CACHE_MS,
         });
       });
-  }, [requestKey, attempt]);
+  }, [token]);
 
   const loadMore = useCallback(() => {
     if (inFlight.current) return;
@@ -117,5 +124,6 @@ export function useGiphyPages(requestKey, fetchPage) {
 
   const retry = useCallback(() => setAttempt((n) => n + 1), []);
 
-  return { ...state, loadMore, retry };
+  const view = state.token === token ? state : { ...initialState, token };
+  return { ...view, loadMore, retry };
 }

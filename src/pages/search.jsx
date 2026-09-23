@@ -30,7 +30,7 @@ const Search = () => {
 
   return (
     <div className="my-4">
-      <h2 className="text-5xl pb-3 font-extrabold break-words">{query}</h2>
+      <h2 className="text-5xl pb-3 font-extrabold wrap-break-word">{query}</h2>
       <FilterGif alignLeft={true} />
 
       {status === "loading" && <GifGridSkeleton />}

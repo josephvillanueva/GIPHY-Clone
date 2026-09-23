@@ -13,38 +13,30 @@ const SDK_ERROR_CACHE_MS = 6000;
  * earlier request can never overwrite newer results.
  */
 export function useGiphy(requestKey, fetcher, initialData = []) {
-  const [state, setState] = useState({
-    status: "loading",
-    data: initialData,
-    error: null,
-    retryAt: null,
-  });
   const [attempt, setAttempt] = useState(0);
+  const token = `${requestKey}#${attempt}`;
+
+  const loading = { token, status: "loading", data: initialData, error: null, retryAt: null };
+  const [state, setState] = useState(loading);
+
+  // A new request resets to loading during render, the pattern React
+  // recommends over resetting state inside an effect.
+  if (state.token !== token) setState(loading);
 
   useEffect(() => {
     let current = true;
-    setState({
-      status: "loading",
-      data: initialData,
-      error: null,
-      retryAt: null,
-    });
 
     fetcher()
       .then((response) => {
         if (current) {
-          setState({
-            status: "success",
-            data: response.data,
-            error: null,
-            retryAt: null,
-          });
+          setState({ token, status: "success", data: response.data, error: null, retryAt: null });
         }
       })
       .catch((error) => {
         console.error("GIPHY request failed", error);
         if (current) {
           setState({
+            token,
             status: "error",
             data: initialData,
             error,
@@ -56,11 +48,13 @@ export function useGiphy(requestKey, fetcher, initialData = []) {
     return () => {
       current = false;
     };
-    // The fetcher is recreated on every render; requestKey captures its inputs.
+    // The fetcher and initialData are recreated on every render; the token
+    // captures every input that should trigger a new request.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [requestKey, attempt]);
+  }, [token]);
 
   const retry = useCallback(() => setAttempt((n) => n + 1), []);
 
-  return { ...state, retry };
+  const view = state.token === token ? state : loading;
+  return { status: view.status, data: view.data, error: view.error, retryAt: view.retryAt, retry };
 }

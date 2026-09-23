@@ -10,14 +10,17 @@ const Header = () => {
 
   const { favorites } = GifState();
 
-  const fetchGifCategories = async () => {
-    const res = await fetch("/categories.json");
-    const { data } = await res.json();
-    setCategories(data);
-  };
-
   useEffect(() => {
-    fetchGifCategories();
+    let active = true;
+    fetch("/categories.json")
+      .then((res) => res.json())
+      .then(({ data }) => {
+        if (active) setCategories(data);
+      })
+      .catch((error) => console.error("Could not load categories", error));
+    return () => {
+      active = false;
+    };
   }, []);
 
   return (
@@ -63,7 +66,7 @@ const Header = () => {
           {favorites.length > 0 && (
             <Link
               to="/favorites"
-              className="h-9 bg-gray-700 pt-1.5 px-6 rounded whitespace-nowrap"
+              className="h-9 bg-gray-700 pt-1.5 px-6 rounded-sm whitespace-nowrap"
             >
               Favorite GIFs
             </Link>
