@@ -18,5 +18,9 @@ jobs:
       - run: npm ci
       - name: Lint
         run: npm run lint
+      - name: Test favorites
+        run: npm test
+      - name: Test favorites access policies
+        run: npm run test:sql
       - name: Build
         run: npm run build

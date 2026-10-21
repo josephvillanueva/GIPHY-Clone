@@ -1,59 +1,39 @@
 /* eslint-disable react/prop-types */
 
 import { GiphyFetch } from "@giphy/js-fetch-api";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { createFavoritesStore } from "../lib/favorites-store";
+import { supabase } from "../lib/supabase";
 
-const FAVORITES_KEY = "favoriteGIFs";
-
-// One client for the app's lifetime rather than a new one on every render.
 const gf = new GiphyFetch(import.meta.env.VITE_GIPHY_KEY);
-
-// Read synchronously so the first render already has the saved favorites.
-// Loading them in an effect left the Favorites page fetching an empty list
-// on refresh.
-function readFavorites() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(FAVORITES_KEY));
-    return Array.isArray(saved) ? saved : [];
-  } catch {
-    return [];
-  }
-}
-
 const GifContext = createContext(null);
 
 const GifProvider = ({ children }) => {
   const [filter, setFilter] = useState("gifs");
-  const [favorites, setFavorites] = useState(readFavorites);
-
+  const [store] = useState(() => {
+    let storage;
+    try { storage = window.localStorage; } catch { /* Storage may be disabled. */ }
+    return createFavoritesStore(supabase, storage);
+  });
+  const account = useSyncExternalStore(store.subscribe, store.getSnapshot);
   useEffect(() => {
-    try {
-      localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
-    } catch {
-      // Storage unavailable (private mode or quota): keep favorites in memory.
-    }
-  }, [favorites]);
+    const stop = store.start();
+    const retry = () => { void store.retrySync(); };
+    const onVisible = () => { if (document.visibilityState === "visible") retry(); };
+    window.addEventListener("online", retry);
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      stop();
+      window.removeEventListener("online", retry);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+  }, [store]);
 
-  const toggleFavorite = useCallback((id) => {
-    setFavorites((current) =>
-      current.includes(id)
-        ? current.filter((itemId) => itemId !== id)
-        : [...current, id],
-    );
-  }, []);
-
-  const value = useMemo(
-    () => ({ gf, filter, setFilter, favorites, toggleFavorite }),
-    [filter, favorites, toggleFavorite],
-  );
-
+  const value = useMemo(() => ({
+    gf, filter, setFilter, ...account,
+    toggleFavorite: store.toggleFavorite, importFavorites: store.importFavorites,
+    retrySync: store.retrySync, signIn: store.signIn, signOut: store.signOut,
+  }), [filter, account, store]);
   return <GifContext.Provider value={value}>{children}</GifContext.Provider>;
 };
 

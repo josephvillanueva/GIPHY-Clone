@@ -42,7 +42,7 @@ const GifPage = () => {
 };
 
 const GifDetail = ({ slug }) => {
-  const { gf, toggleFavorite, favorites } = GifState();
+  const { gf, toggleFavorite, favorites, authLoading } = GifState();
   const [readMore, setReadMore] = useState(false);
   const [copied, setCopied] = useState(null);
   const id = slug.split("-").pop();
@@ -108,6 +108,7 @@ const GifDetail = ({ slug }) => {
     <button
       type="button"
       onClick={() => toggleFavorite(gif.id)}
+      disabled={authLoading}
       aria-pressed={isFavorite}
       className="flex gap-5 items-center font-bold text-lg"
     >
