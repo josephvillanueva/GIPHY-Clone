@@ -11,6 +11,11 @@ export default [
   react.configs.flat["jsx-runtime"],
   reactHooks.configs.flat.recommended,
   {
+    files: ["tests/**/*.mjs"],
+    languageOptions: { globals: globals.node },
+    settings: { react: { version: "detect" } },
+  },
+  {
     files: ["**/*.{js,jsx}"],
     languageOptions: {
       ecmaVersion: "latest",
