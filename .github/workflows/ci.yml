@@ -1,12 +1,16 @@
-name: CI
+name: Lint
 
+# Lint only. Install, build and the rest of verification run on CircleCI.
 on:
   push:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
-  check:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -18,5 +22,3 @@ jobs:
       - run: npm ci
       - name: Lint
         run: npm run lint
-      - name: Build
-        run: npm run build
